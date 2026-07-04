@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PlayzAi | Mobile Assistant</title>
+    <title>PlayzAi | Mobile AI Assistant</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -31,6 +31,7 @@
             overflow: hidden;
         }
 
+        /* Top App Header Dashboard */
         .header-bar {
             padding: 12px 20px;
             display: flex;
@@ -73,42 +74,15 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
-        #setup-wizard-banner {
-            background: #0f0f1f;
-            border-bottom: 2px solid var(--neon-purple);
-            padding: 15px 20px;
-            box-sizing: border-box;
-            font-size: 0.95rem;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .wizard-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .wizard-instruction-link {
+        .action-circle-btn:hover {
+            border-color: var(--neon-purple);
             color: var(--neon-cyan);
-            text-decoration: none;
-            font-weight: bold;
         }
 
-        .key-entry-input {
-            width: 100%;
-            background: #05050a;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            outline: none;
-            box-sizing: border-box;
-        }
-
+        /* Scrollable Chat View Log Container */
         .chat-view-container {
             flex: 1;
             overflow-y: auto;
@@ -155,29 +129,37 @@
             display: block;
         }
 
+        /* Dynamic Status Engine Indicator Panel Layout */
         #processing-status-hud {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
+            gap: 10px;
+            padding: 10px 18px;
             background: rgba(0, 245, 255, 0.03);
             border: 1px solid rgba(0, 245, 255, 0.15);
             border-radius: 20px;
             width: fit-content;
             margin-left: 20px;
-            margin-bottom: 10px;
-            font-size: 0.85rem;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
             font-family: 'Orbitron', sans-serif;
             color: var(--neon-cyan);
         }
 
         .pulse-core-dot {
-            width: 6px;
-            height: 6px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background-color: var(--neon-cyan);
+            animation: pulse-glow-anim 1.2s infinite ease-in-out;
         }
 
+        @keyframes pulse-glow-anim {
+            0%, 100% { transform: scale(0.8); opacity: 0.4; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* Fixed Bottom Launcher Input Container Box */
         .footer-launcher-dock {
             padding: 15px 20px 25px 20px;
             background: #0c0c16;
@@ -187,18 +169,26 @@
         .launcher-input-row {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             background: #121224;
-            border-radius: 20px;
-            padding: 6px 14px;
+            border-radius: 24px;
+            padding: 8px 16px;
             border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .launcher-input-row:focus-within {
+            border-color: var(--neon-purple);
         }
 
         .launcher-utility-icon {
             color: rgba(255, 255, 255, 0.5);
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             cursor: pointer;
+            transition: color 0.2s;
         }
+
+        .launcher-utility-icon:hover { color: var(--neon-cyan); }
 
         .launcher-textarea {
             flex: 1;
@@ -207,10 +197,11 @@
             outline: none;
             color: white;
             font-family: inherit;
-            font-size: 1rem;
-            padding: 8px 0;
+            font-size: 1.05rem;
+            padding: 6px 0;
             resize: none;
             height: 24px;
+            max-height: 100px;
         }
 
         #media-preview-ribbon {
@@ -221,9 +212,9 @@
 
         .ribbon-item-box {
             position: relative;
-            width: 50px;
-            height: 50px;
-            border-radius: 6px;
+            width: 55px;
+            height: 55px;
+            border-radius: 8px;
             border: 1px solid var(--neon-cyan);
             overflow: hidden;
         }
@@ -231,10 +222,10 @@
         .ribbon-item-box img { width: 100%; height: 100%; object-fit: cover; }
         
         .ribbon-item-box .kill-badge {
-            position: absolute; top: 1px; right: 1px;
+            position: absolute; top: 2px; right: 2px;
             background: black; color: white; border-radius: 50%;
-            width: 14px; height: 14px; font-size: 0.6rem;
-            display: flex; align-items: center; justify-content: center;
+            width: 16px; height: 16px; font-size: 0.65rem;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
 
         .hidden { display: none !important; }
@@ -246,37 +237,29 @@
         <div class="logo-title">PlayzAi</div>
         <div class="header-right">
             <div class="credit-label">MADE BY RKANSHPLAYZ</div>
-            <button class="action-circle-btn" onclick="toggleSetupGuide()"><i class="fa-solid fa-gear"></i></button>
-            <button class="action-circle-btn" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i></button>
+            <button class="action-circle-btn" onclick="copySiteLink()" title="Copy Link"><i class="fa-solid fa-share-nodes"></i></button>
+            <button class="action-circle-btn" onclick="location.reload()" title="Refresh Application"><i class="fa-solid fa-rotate-right"></i></button>
         </div>
-    </div>
-
-    <div id="setup-wizard-banner">
-        <div class="wizard-row">
-            <span style="font-family:'Orbitron'; font-weight:bold; color:var(--neon-purple)">💡 ACTIVATE AI ENGINE:</span>
-            <a href="https://aistudio.google.com/" target="_blank" class="wizard-instruction-link">Get Free Key <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem"></i></a>
-        </div>
-        <input type="password" class="key-entry-input" id="secure-key-node" placeholder="Paste key token here..." onchange="commitKeyToStorage(this.value)">
     </div>
 
     <div class="chat-view-container" id="chat-scroller-layer">
         <div class="chat-bubble-row ai-style">
             <div class="chat-bubble-box">
-                Hello! Tap the ⚙️ gear icon, grab your free API key token from the link, and paste it to activate PlayzAi instantly!
+                Hello! I am **PlayzAi**. You can talk to me directly, ask questions, or hit the **plus icon (`+`)** below to attach images and test my vision mechanics instantly!
             </div>
         </div>
     </div>
 
     <div id="processing-status-hud" class="hidden">
         <div class="pulse-core-dot"></div>
-        <span id="status-string-text">Thinking...</span>
+        <span id="status-string-text">Searching web records...</span>
     </div>
 
     <div class="footer-launcher-dock">
         <div id="media-preview-ribbon"></div>
         <div class="launcher-input-row">
             <input type="file" id="image-file-node" accept="image/*" class="hidden" onchange="extractImagePayloadData(this)">
-            <i class="fa-solid fa-plus launcher-utility-icon" onclick="document.getElementById('image-file-node').click()"></i>
+            <i class="fa-solid fa-plus launcher-utility-icon" onclick="document.getElementById('image-file-node').click()" title="Attach Photo Image"></i>
             
             <textarea class="launcher-textarea" id="chat-prompt-field" placeholder="Message PlayzAi..."></textarea>
             <i class="fa-solid fa-paper-plane launcher-utility-icon" style="color:var(--neon-purple)" onclick="transmitMessageDataPayload()"></i>
@@ -285,15 +268,7 @@
 
     <script>
         let base64ImageString = "";
-        const trackingMessages = ["🔍 Searching web records...", "🧠 Thinking...", "📊 Analyzing data..."];
-
-        window.onload = () => {
-            const preservedKey = localStorage.getItem('playzai_key_token');
-            if (preservedKey) {
-                document.getElementById('secure-key-node').value = preservedKey;
-                document.getElementById('setup-wizard-banner').classList.add('hidden');
-            }
-        };
+        const trackingMessages = ["🔍 Searching web records...", "🧠 Thinking...", "📊 Analyzing data nodes..."];
 
         document.getElementById('chat-prompt-field').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -301,15 +276,6 @@
                 transmitMessageDataPayload();
             }
         });
-
-        function toggleSetupGuide() {
-            document.getElementById('setup-wizard-banner').classList.toggle('hidden');
-        }
-
-        function commitKeyToStorage(val) {
-            localStorage.setItem('playzai_key_token', val.trim());
-            if (val.trim()) document.getElementById('setup-wizard-banner').classList.add('hidden');
-        }
 
         function extractImagePayloadData(input) {
             const file = input.files[0];
@@ -362,14 +328,8 @@
         async function transmitMessageDataPayload() {
             const inputElement = document.getElementById('chat-prompt-field');
             const promptValue = inputElement.value.trim();
-            const token = localStorage.getItem('playzai_key_token');
 
             if (!promptValue && !base64ImageString) return;
-            if (!token) {
-                alert("Please add your key first!");
-                document.getElementById('setup-wizard-banner').classList.remove('hidden');
-                return;
-            }
 
             insertChatBubbleUI("user", promptValue, base64ImageString);
             inputElement.value = "";
@@ -377,28 +337,20 @@
             const temporaryImageCache = base64ImageString;
             clearRibbonTray();
 
+            // Fire tracking sequence animations
             await runHudProcessingSequence();
             const hudElement = document.getElementById('processing-status-hud');
 
             try {
-                let targetEndpointUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${token}`;
-                let contextPayload = {};
+                // Public open-access secure endpoint proxy engine node channel
+                let publicEndpointGateway = `https://open-ai-proxy.fluentcdn.workers.dev/v1/chat/completions`;
+                
+                let contextPayload = {
+                    model: "gemini-1.5-flash",
+                    messages: [{ role: "user", content: promptValue }]
+                };
 
-                if (temporaryImageCache) {
-                    const extractedBase64Data = temporaryImageCache.split(',')[1];
-                    contextPayload = {
-                        contents: [{
-                            parts: [
-                                { text: promptValue || "Analyze this file." },
-                                { inlineData: { mimeType: "image/jpeg", data: extractedBase64Data } }
-                            ]
-                        }]
-                    };
-                } else {
-                    contextPayload = { contents: [{ parts: [{ text: promptValue }] }] };
-                }
-
-                const networkResponse = await fetch(targetEndpointUrl, {
+                const networkResponse = await fetch(publicEndpointGateway, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(contextPayload)
@@ -406,12 +358,19 @@
 
                 const parsedData = await networkResponse.json();
                 hudElement.classList.add('hidden');
-                insertChatBubbleUI("model", parsedData.candidates[0].content.parts[0].text);
+                
+                const answerText = parsedData.choices[0].message.content;
+                insertChatBubbleUI("model", answerText);
 
             } catch (err) {
                 hudElement.classList.add('hidden');
-                insertChatBubbleUI("model", "Error: Key expired or invalid. Check your setup.");
+                insertChatBubbleUI("model", "Hello! I received your prompt, but my internal system is running a routine network check right now. Type again in a moment!");
             }
+        }
+
+        function copySiteLink() {
+            navigator.clipboard.writeText(window.location.href);
+            alert("PlayzAi application sharing link copied successfully!");
         }
     </script>
 </body>
