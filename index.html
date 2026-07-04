@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PlayzAi | Advanced Assistant</title>
+    <title>PlayzAi | Mobile Assistant</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
             --bg-deep: #06060c;
-            --panel-bg: rgba(15, 15, 30, 0.9);
+            --panel-bg: rgba(12, 12, 22, 0.9);
             --neon-purple: #bc13fe;
             --neon-cyan: #00f5ff;
             --chat-user: #261640;
@@ -31,15 +31,13 @@
             overflow: hidden;
         }
 
-        /* Top Navigation Header */
         .header-bar {
             padding: 12px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(12, 12, 22, 0.8);
-            backdrop-filter: blur(10px);
+            background: #0c0c16;
             z-index: 100;
         }
 
@@ -75,17 +73,10 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
-        .action-circle-btn:hover {
-            border-color: var(--neon-purple);
-            color: var(--neon-cyan);
-        }
-
-        /* Interactive Setup Guide Ribbon Card */
         #setup-wizard-banner {
-            background: linear-gradient(135deg, rgba(20, 10, 35, 0.95), rgba(10, 20, 40, 0.95));
+            background: #0f0f1f;
             border-bottom: 2px solid var(--neon-purple);
             padding: 15px 20px;
             box-sizing: border-box;
@@ -93,7 +84,6 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
 
         .wizard-row {
@@ -106,29 +96,19 @@
             color: var(--neon-cyan);
             text-decoration: none;
             font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
         }
 
         .key-entry-input {
             width: 100%;
-            background: #090912;
+            background: #05050a;
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: white;
             padding: 8px 12px;
             border-radius: 6px;
             outline: none;
-            font-size: 0.9rem;
             box-sizing: border-box;
-            transition: border-color 0.2s;
         }
 
-        .key-entry-input:focus {
-            border-color: var(--neon-cyan);
-        }
-
-        /* Scrollable Chat Workspace Window Area */
         .chat-view-container {
             flex: 1;
             overflow-y: auto;
@@ -168,7 +148,6 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Image Display Attachments within Logs */
         .chat-image-preview {
             max-width: 100%;
             border-radius: 8px;
@@ -176,7 +155,6 @@
             display: block;
         }
 
-        /* Live Processing Anim Banner HUD */
         #processing-status-hud {
             display: flex;
             align-items: center;
@@ -198,15 +176,8 @@
             height: 6px;
             border-radius: 50%;
             background-color: var(--neon-cyan);
-            animation: pulse-glow-anim 1.2s infinite ease-in-out;
         }
 
-        @keyframes pulse-glow-anim {
-            0%, 100% { transform: scale(0.8); opacity: 0.4; }
-            50% { transform: scale(1.2); opacity: 1; }
-        }
-
-        /* Fixed Footer Message Launcher Hub Layout */
         .footer-launcher-dock {
             padding: 15px 20px 25px 20px;
             background: #0c0c16;
@@ -223,18 +194,11 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .launcher-input-row:focus-within {
-            border-color: var(--neon-purple);
-        }
-
         .launcher-utility-icon {
             color: rgba(255, 255, 255, 0.5);
             font-size: 1.2rem;
             cursor: pointer;
-            transition: color 0.2s;
         }
-
-        .launcher-utility-icon:hover { color: var(--neon-cyan); }
 
         .launcher-textarea {
             flex: 1;
@@ -247,7 +211,6 @@
             padding: 8px 0;
             resize: none;
             height: 24px;
-            max-height: 80px;
         }
 
         #media-preview-ribbon {
@@ -271,7 +234,7 @@
             position: absolute; top: 1px; right: 1px;
             background: black; color: white; border-radius: 50%;
             width: 14px; height: 14px; font-size: 0.6rem;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
         }
 
         .hidden { display: none !important; }
@@ -279,56 +242,50 @@
 </head>
 <body>
 
-    <!-- Header Panel -->
     <div class="header-bar">
         <div class="logo-title">PlayzAi</div>
         <div class="header-right">
             <div class="credit-label">MADE BY RKANSHPLAYZ</div>
-            <button class="action-circle-btn" onclick="toggleSetupGuide()" title="Setup Guide Menu"><i class="fa-solid fa-gear"></i></button>
-            <button class="action-circle-btn" onclick="location.reload()" title="Refresh Interface"><i class="fa-solid fa-rotate-right"></i></button>
+            <button class="action-circle-btn" onclick="toggleSetupGuide()"><i class="fa-solid fa-gear"></i></button>
+            <button class="action-circle-btn" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i></button>
         </div>
     </div>
 
-    <!-- Active User Setup Instruction Guide Card Banner -->
     <div id="setup-wizard-banner">
         <div class="wizard-row">
-            <span style="font-family:'Orbitron'; font-weight:bold; color:var(--neon-purple)">💡 UNLOCK CHAT ENGINE ACCESS:</span>
+            <span style="font-family:'Orbitron'; font-weight:bold; color:var(--neon-purple)">💡 ACTIVATE AI ENGINE:</span>
             <a href="https://aistudio.google.com/" target="_blank" class="wizard-instruction-link">Get Free Key <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem"></i></a>
         </div>
-        <div style="font-size:0.85rem; opacity:0.7; margin-bottom:4px;">Tap the link, hit "Create API Key", and paste the code token below:</div>
-        <input type="password" class="key-entry-input" id="secure-key-node" placeholder="Paste free key token here to start chat..." onchange="commitKeyToStorage(this.value)">
+        <input type="password" class="key-entry-input" id="secure-key-node" placeholder="Paste key token here..." onchange="commitKeyToStorage(this.value)">
     </div>
 
-    <!-- Scrollable Dialog Panel Layer Frame -->
     <div class="chat-view-container" id="chat-scroller-layer">
         <div class="chat-bubble-row ai-style">
             <div class="chat-bubble-box">
-                👋 Welcome to **PlayzAi**! To start chatting instantly, tap the small ⚙️ gear icon in the top corner, click the "Get Free Key" link to copy your token, and paste it into the slot! Once done, you're ready to go!
+                Hello! Tap the ⚙️ gear icon, grab your free API key token from the link, and paste it to activate PlayzAi instantly!
             </div>
         </div>
     </div>
 
-    <!-- Status Engine Banner HUD Notification Layer -->
     <div id="processing-status-hud" class="hidden">
         <div class="pulse-core-dot"></div>
-        <span id="status-string-text">Searching web records...</span>
+        <span id="status-string-text">Thinking...</span>
     </div>
 
-    <!-- Fixed Footer Launcher Engine Dock Module -->
     <div class="footer-launcher-dock">
         <div id="media-preview-ribbon"></div>
         <div class="launcher-input-row">
             <input type="file" id="image-file-node" accept="image/*" class="hidden" onchange="extractImagePayloadData(this)">
-            <i class="fa-solid fa-plus launcher-utility-icon" onclick="document.getElementById('image-file-node').click()" title="Attach Photo Context"></i>
+            <i class="fa-solid fa-plus launcher-utility-icon" onclick="document.getElementById('image-file-node').click()"></i>
             
-            <textarea class="launcher-textarea" id="chat-prompt-field" placeholder="Message PlayzAi..." onkeydown="interceptFieldKeydown(event)"></textarea>
+            <textarea class="launcher-textarea" id="chat-prompt-field" placeholder="Message PlayzAi..."></textarea>
             <i class="fa-solid fa-paper-plane launcher-utility-icon" style="color:var(--neon-purple)" onclick="transmitMessageDataPayload()"></i>
         </div>
     </div>
 
     <script>
         let base64ImageString = "";
-        const trackingMessages = ["🔍 Searching website records...", "🧠 Thinking...", "📊 Analyzing data nodes..."];
+        const trackingMessages = ["🔍 Searching web records...", "🧠 Thinking...", "📊 Analyzing data..."];
 
         window.onload = () => {
             const preservedKey = localStorage.getItem('playzai_key_token');
@@ -338,9 +295,15 @@
             }
         };
 
+        document.getElementById('chat-prompt-field').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                transmitMessageDataPayload();
+            }
+        });
+
         function toggleSetupGuide() {
-            const banner = document.getElementById('setup-wizard-banner');
-            banner.classList.toggle('hidden');
+            document.getElementById('setup-wizard-banner').classList.toggle('hidden');
         }
 
         function commitKeyToStorage(val) {
@@ -371,13 +334,6 @@
             document.getElementById('image-file-node').value = "";
         }
 
-        function interceptFieldKeydown(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                transmitMessageDataPayload();
-            }
-        }
-
         function insertChatBubbleUI(role, text, imageSrc) {
             const scroller = document.getElementById('chat-scroller-layer');
             const row = document.createElement('div');
@@ -399,7 +355,7 @@
 
             for (let message of trackingMessages) {
                 label.innerText = message;
-                await new Promise(r => setTimeout(r, 800));
+                await new Promise(r => setTimeout(r, 600));
             }
         }
 
@@ -410,7 +366,7 @@
 
             if (!promptValue && !base64ImageString) return;
             if (!token) {
-                alert("Please click the ⚙️ gear icon and paste your free key first!");
+                alert("Please add your key first!");
                 document.getElementById('setup-wizard-banner').classList.remove('hidden');
                 return;
             }
@@ -421,9 +377,7 @@
             const temporaryImageCache = base64ImageString;
             clearRibbonTray();
 
-            // Run process banner state changes
             await runHudProcessingSequence();
-
             const hudElement = document.getElementById('processing-status-hud');
 
             try {
@@ -452,17 +406,14 @@
 
                 const parsedData = await networkResponse.json();
                 hudElement.classList.add('hidden');
-
-                const answerText = parsedData.candidates[0].content.parts[0].text;
-                insertChatBubbleUI("model", answerText);
+                insertChatBubbleUI("model", parsedData.candidates[0].content.parts[0].text);
 
             } catch (err) {
                 hudElement.classList.add('hidden');
-                insertChatBubbleUI("model", "Configuration Error: Connection dropped or key expired. Tap the gear icon to reset.");
+                insertChatBubbleUI("model", "Error: Key expired or invalid. Check your setup.");
             }
         }
     </script>
-
 </body>
 </html>
 
