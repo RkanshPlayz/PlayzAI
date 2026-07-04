@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PlayzAi | Advanced Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-deep: #06060c;
+            --sidebar-bg: #0c0c16;
+            --chat-bubble-user: #261640;
+            --chat-bubble-ai: #121224;
+            --neon-purple: #bc13fe;
+            --neon-cyan: #00f5ff;
+            --text-main: #f1f2f6;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        /* 1. SIDEBAR CHAT HISTORY MANAGEMENT PANEL */
+        #sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid rgba(188, 19, 254, 0.15);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 15px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .new-chat-btn {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(188, 19, 254, 0.3);
+        }
+
+        .history-section {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 5px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.02);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .history-item:hover, .history-item.active {
+            background: rgba(188, 19, 254, 0.08);
+            border-color: rgba(188, 19, 254, 0.3);
+        }
+
+        .history-item-text {
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 80%;
+        }
+
+        .history-actions i {
+            font-size: 0.85rem;
+            opacity: 0.6;
+            margin-left: 5px;
+            transition: color 0.2s;
+        }
+
+        .history-actions i:hover { color: var(--neon-cyan); }
+
+        /* 2. MAIN APPLICATION CONTENT NODE FRAME */
+        #main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            height: 100%;
+        }
+
+        /* Top Bar Branding and Quick Utility Actions Container */
+        .top-navbar {
+            height: 60px;
+            padding: 0 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(6, 6, 12, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-area {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-credit {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .util-controls { display: flex; gap: 10px; }
+        .util-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .util-btn:hover { border-color: var(--neon-purple); color: var(--neon-cyan); }
+
+        /* Chat Workspace Engine Log Panel */
+        .chat-history-log {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chat-row {
+            display: flex;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .chat-row.user-row { justify-content: flex-end; }
+        .chat-row.ai-row { justify-content: flex-start; }
+
+        .chat-bubble {
+            max-width: 75%;
+            padding: 14px 18px;
+            border-radius: 18px;
+            line-height: 1.5;
+            font-size: 1rem;
+            word-wrap: break-word;
+        }
+
+        .user-row .chat-bubble {
+            background-color: var(--chat-bubble-user);
+            border-bottom-right-radius: 4px;
+            border: 1px solid rgba(188, 19, 254, 0.2);
+        }
+
+        .ai-row .chat-bubble {
+            background-color: var(--chat-bubble-ai);
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Attached image item block */
+        .preview-img-chat {
+            max-width: 200px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Advanced Processing State Status pulses */
+        .status-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 245, 255, 0.15);
+            width: fit-content;
+            margin-left: 30px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-cyan);
+        }
+
+        .status-pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--neon-cyan);
+            animation: pulse-glow 1.4s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; box-shadow: 0 0 0 0 rgba(0,245,255,0.7); }
+            50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 8px 3px rgba(0,245,255,0.4); }
+        }
+
+        /* Bottom Fixed Input Box Control Station Wrapper Layout */
+        .input-control-wrapper {
+            padding: 20px 30px 30px 30px;
+            background: linear-gradient(transparent, var(--bg-deep) 40%);
+        }
+
+        .input-bar-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #111122;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        .input-bar-inner:focus-within {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.2);
+        }
+
+        .action-icon-input {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .action-icon-input:hover { color: var(--neon-cyan); }
+
+        .chat-text-area {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            padding: 8px 0;
+            resize: none;
+            max-height: 100px;
+        }
+
+        /* Image Attachment Preview Ribbon Tray */
+        #attachment-preview-tray {
+            max-width: 800px;
+            margin: 0 auto 8px auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .attached-preview-item {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            border: 1px solid var(--neon-cyan);
+            overflow: hidden;
+        }
+
+        .attached-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+        .attached-preview-item .remove-badge {
+            position: absolute; top: 2px; right: 2px;
+            background: black; color: white; border-radius: 50%;
+            width: 16px; height: 16px; font-size: 0.65rem;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+
+        /* Settings Module Config Drawer Overlay */
+        #api-drawer {
+            position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
+            background: #121225; border: 1px solid var(--neon-purple);
+            border-radius: 12px; padding: 10px 20px; display: flex; align-items: center;
+            gap: 15px; z-index: 5000; box-shadow: 0 4px 20px black;
+        }
+        #api-drawer input {
+            background: black; border: 1px solid rgba(255,255,255,0.2);
+            color: white; border-radius: 6px; padding: 6px 12px; font-size: 0.85rem; outline: none;
+        }
+
+        /* Responsive Layout Overrides */
+        @media(max-width: 768px) {
+            #sidebar { display: none; }
+            .brand-credit { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="api-drawer">
+        <span style="font-size:0.8rem; font-family:'Orbitron'; color:var(--neon-cyan)">GEMINI KEY:</span>
+        <input type="password" id="api-key-field" placeholder="Paste free API key here..." onchange="lockApiKey(this.value)">
+    </div>
+
+    <div id="sidebar">
+        <button class="new-chat-btn" onclick="startNewBlankChatThread()">
+            <i class="fa-solid fa-plus"></i> NEW CHAT
+        </button>
+        <div class="history-title">Saved Discussions</div>
+        <div class="history-section" id="sidebar-history-target"></div>
+    </div>
+
+    <div id="main-content">
+        <div class="top-navbar">
+            <div class="logo-area">PlayzAi</div>
+            <div class="brand-credit">MADE BY RKANSHPLAYZ</div>
+            <div class="util-controls">
+                <button class="util-btn" onclick="location.reload()" title="Reset Interface Container"><i class="fa-solid fa-rotate-right"></i></button>
+                <button class="util-btn" id="share-link-btn" onclick="copyInterfaceLink()" title="Copy Application URL Link"><i class="fa-solid fa-share-nodes"></i></button>
+            </div>
+        </div>
+
+        <div class="chat-history-log" id="chat-output-frame"></div>
+
+        <div class="status-container hidden" id="engine-status-banner">
+            <div class="status-pulse-dot"></div>
+            <span id="status-display-text">Thinking...</span>
+        </div>
+
+        <div class="input-control-wrapper">
+            <div id="attachment-preview-tray"></div>
+            
+            <div class="input-bar-inner">
+                <input type="file" id="media-uploader" accept="image/*" class="hidden" onchange="processImageAttachment(this)">
+                <i class="fa-solid fa-plus action-icon-input" onclick="document.getElementById('media-uploader').click()" title="Attach File Images Context"></i>
+                
+                <textarea class="chat-text-area" id="user-chat-input" rows="1" placeholder="Ask PlayzAi anything..." onkeydown="handleInputKeyReturn(event)"></textarea>
+                <i class="fa-solid fa-paper-plane action-icon-input" style="color:var(--neon-purple)" onclick="transmitUserPayloadMessage()"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // System Data Management Properties
+        let conversations = {};
+        let activeChatId = "";
+        let globalAttachedBase64Image = "";
+
+        // Status processing pipeline state string mappings arrays
+        const thinkingPipelines = ["🔍 Searching website records...", "🧠 Thinking...", "📊 Analyzing data nodes..."];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Restore structural values profiles out of localStorage
+            const cachedLogs = localStorage.getItem('playzai_history');
+            const cachedKey = localStorage.getItem('playzai_gemini_key');
+            
+            if(cachedKey) document.getElementById('api-key-field').value = cachedKey;
+            
+            if(cachedLogs) {
+                conversations = JSON.parse(cachedLogs);
+                const keys = Object.keys(conversations);
+                if(keys.length > 0) {
+                    loadSelectedChatThread(keys[0]);
+                } else {
+                    startNewBlankChatThread();
+                }
+            } else {
+                startNewBlankChatThread();
+            }
+            refreshSidebarLogsUI();
+        });
+
+        function lockApiKey(val) {
+            localStorage.setItem('playzai_gemini_key', val.trim());
+        }
+
+        // Sidebar Context Threads Operations Controllers
+        function startNewBlankChatThread() {
+            activeChatId = "chat_" + new Date().getTime();
+            conversations[activeChatId] = {
+                title: "New Dialogue Log Thread",
+                messages: [{ role: "model", text: "Hello! I am PlayzAi. Ask me anything, attach pictures, or manage conversations right here." }]
+            };
+            saveConversationsState();
+            loadSelectedChatThread(activeChatId);
+        }
+
+        function loadSelectedChatThread(chatId) {
+            activeChatId = chatId;
+            refreshSidebarLogsUI();
+            
+            const logWindow = document.getElementById('chat-output-frame');
+            logWindow.innerHTML = "";
+            
+            conversations[activeChatId].messages.forEach(msg => {
+                appendBubbleToWindow(msg.role, msg.text, msg.image);
+            });
+            scrollLogToBottomViewport();
+        }
+
+        function renameChatThread(chatId, e) {
+            e.stopPropagation();
+            const currentTitle = conversations[chatId].title;
+            const renamed = prompt("Enter new title for this chat thread:", currentTitle);
+            if(renamed && renamed.trim()) {
+                conversations[chatId].title = renamed.trim();
+                saveConversationsState();
+                refreshSidebarLogsUI();
+            }
+        }
+
+        function purgeChatThread(chatId, e) {
+            e.stopPropagation();
+            if(confirm("Confirm deletion of this saved chat logs profile thread?")) {
+                delete conversations[chatId];
+                saveConversationsState();
+                const remaining = Object.keys(conversations);
+                if(remaining.length > 0) loadSelectedChatThread(remaining[0]);
+                else startNewBlankChatThread();
+            }
+        }
+
+        function saveConversationsState() {
+            localStorage.setItem('playzai_history', JSON.stringify(conversations));
+        }
+
+        function refreshSidebarLogsUI() {
+            const container = document.getElementById('sidebar-history-target');
+            container.innerHTML = "";
+
+            Object.keys(conversations).forEach(id => {
+                const item = document.createElement('div');
+                item.className = `history-item ${id === activeChatId ? 'active' : ''}`;
+                item.onclick = () => loadSelectedChatThread(id);
+                
+                item.innerHTML = `
+                    <div class="history-item-text"><i class="fa-regular fa-message" style="margin-right:8px; opacity:0.5"></i>${conversations[id].title}</div>
+                    <div class="history-actions">
+                        <i class="fa-solid fa-pen" onclick="renameChatThread('${id}', event)"></i>
+                        <i class="fa-solid fa-trash" onclick="purgeChatThread('${id}', event)"></i>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Image Attachment Extraction Engine Setup
+        function processImageAttachment(uploader) {
+            const file = uploader.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                globalAttachedBase64Image = e.target.result;
+                const tray = document.getElementById('attachment-preview-tray');
+                tray.innerHTML = `
+                    <div class="attached-preview-item">
+                        <img src="${globalAttachedBase64Image}">
+                        <div class="remove-badge" onclick="clearAttachmentTray()"><i class="fa-solid fa-xmark"></i></div>
+                    </div>
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearAttachmentTray() {
+            globalAttachedBase64Image = "";
+            document.getElementById('attachment-preview-tray').innerHTML = "";
+            document.getElementById('media-uploader').value = "";
+        }
+
+        // Transmit Messages Input Pipelines
+        function handleInputKeyReturn(e) {
+            if(e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                transmitUserPayloadMessage();
+            }
+        }
+
+        async function transmitUserPayloadMessage() {
+            const inputField = document.getElementById('user-chat-input');
+            const userText = inputField.value.trim();
+            if(!userText && !globalAttachedBase64Image) return;
+
+            // Append input metrics logs structures to data trees profiles
+            appendBubbleToWindow("user", userText, globalAttachedBase64Image);
+            conversations[activeChatId].messages.push({
+                role: "user", text: userText, image: globalAttachedBase64Image
+            });
+
+            // Auto title chat threads based on initial prompt entries context elements
+            if(conversations[activeChatId].title === "New Dialogue Log Thread") {
+                conversations[activeChatId].title = userText.substring(0, 22) + "...";
+            }
+
+            // Clear input forms
+            inputField.value = "";
+            const activeImg = globalAttachedBase64Image;
+            clearAttachmentTray();
+            saveConversationsState();
+            refreshSidebarLogsUI();
+
+            // Run Gemini status sequence triggers
+            await executeStatusPipelineAnimations();
+
+            // Fire Gemini AI API calling node pipelines
+            await fetchGeminiAIModelResponse(userText, activeImg);
+        }
+
+        function appendBubbleToWindow(role, text, imageBase64) {
+            const frame = document.getElementById('chat-output-frame');
+            const row = document.createElement('div');
+            row.className = `chat-row ${role === 'user' ? 'user-row' : 'ai-row'}`;
+            
+            let innerContent = "";
+            if(imageBase64) innerContent += `<img src="${imageBase64}" class="preview-img-chat">`;
+            if(text) innerContent += `<div>${text.replace(/\n/g, '<br>')}</div>`;
+
+            row.innerHTML = `<div class="chat-bubble">${innerContent}</div>`;
+            frame.appendChild(row);
+            scrollLogToBottomViewport();
+        }
+
+        function scrollLogToBottomViewport() {
+            const frame = document.getElementById('chat-output-frame');
+            frame.scrollTop = frame.scrollHeight;
+        }
+
+        // Run sequential text flashes for core statuses models
+        async function executeStatusPipelineAnimations() {
+            const banner = document.getElementById('engine-status-banner');
+            const textNode = document.getElementById('status-display-text');
+            banner.classList.remove('hidden');
+
+            for (let status of thinkingPipelines) {
+                textNode.innerText = status;
+                await new Promise(r => setTimeout(r, 900));
+            }
+        }
+
+        // Fetch Data out of Official Gemini Rest API Nodes Serverless structures
+        async function fetchGeminiAIModelResponse(promptText, imageBase64) {
+            const banner = document.getElementById('engine-status-banner');
+            const apiKey = localStorage.getItem('playzai_gemini_key');
+            
+            if(!apiKey) {
+                banner.classList.add('hidden');
+                appendBubbleToWindow("model", "API Error: Please enter your Google Gemini API Key into the top configuration drawer box to initialize conversational layers.");
+                return;
+            }
+
+            try {
+                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+                let payload = {};
+
+                if(imageBase64) {
+                    // Vision processing array matrix conversions
+                    const rawBase64 = imageBase64.split(',')[1];
+                    payload = {
+                        contents: [{
+                            parts: [
+                                { text: promptText || "Analyze this image context." },
+                                { inlineData: { mimeType: "image/jpeg", data: rawBase64 } }
+                            ]
+                        }]
+                    };
+                } else {
+                    // Standard prompt mapping configuration entries arrays layers
+                    payload = { contents: [{ parts: [{ text: promptText }] }] };
+                }
+
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await res.json();
+                banner.classList.add('hidden');
+
+                const outputText = data.candidates[0].content.parts[0].text;
+                appendBubbleToWindow("model", outputText);
+                
+                conversations[activeChatId].messages.push({ role: "model", text: outputText });
+                saveConversationsState();
+
+            } catch(e) {
+                banner.classList.add('hidden');
+                appendBubbleToWindow("model", "Error contacting Gemini engine servers. Check API key validity rules settings parameters layers.");
+            }
+        }
+
+        // Top Controls Scripts Engines
+        function copyInterfaceLink() {
+            const btn = document.getElementById('share-link-btn');
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                btn.innerHTML = '<i class="fa-solid fa-check" style="color:#00ff88"></i>';
+                setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-share-nodes"></i>'; }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
