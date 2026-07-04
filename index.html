@@ -4,154 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PlayzAi | Advanced Assistant</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
             --bg-deep: #06060c;
-            --sidebar-bg: #0c0c16;
-            --chat-bubble-user: #261640;
-            --chat-bubble-ai: #121224;
+            --panel-bg: rgba(15, 15, 30, 0.9);
             --neon-purple: #bc13fe;
             --neon-cyan: #00f5ff;
-            --text-main: #f1f2f6;
+            --chat-user: #261640;
+            --chat-ai: #121224;
+            --text-color: #f1f2f6;
         }
 
         body {
             margin: 0;
             padding: 0;
             background-color: var(--bg-deep);
-            color: var(--text-main);
-            font-family: 'Space Grotesk', sans-serif;
+            color: var(--text-color);
+            font-family: 'Rajdhani', sans-serif;
             display: flex;
+            flex-direction: column;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
         }
 
-        /* 1. SIDEBAR CHAT HISTORY MANAGEMENT PANEL */
-        #sidebar {
-            width: 280px;
-            background-color: var(--sidebar-bg);
-            border-right: 1px solid rgba(188, 19, 254, 0.15);
-            display: flex;
-            flex-direction: column;
-            padding: 20px 15px;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .new-chat-btn {
-            font-family: 'Orbitron', sans-serif;
-            background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
-            border: none;
-            color: white;
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(188, 19, 254, 0.3);
-        }
-
-        .history-section {
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .history-title {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255,255,255,0.4);
-            margin-bottom: 5px;
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .history-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.02);
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-
-        .history-item:hover, .history-item.active {
-            background: rgba(188, 19, 254, 0.08);
-            border-color: rgba(188, 19, 254, 0.3);
-        }
-
-        .history-item-text {
-            font-size: 0.9rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 80%;
-        }
-
-        .history-actions i {
-            font-size: 0.85rem;
-            opacity: 0.6;
-            margin-left: 5px;
-            transition: color 0.2s;
-        }
-
-        .history-actions i:hover { color: var(--neon-cyan); }
-
-        /* 2. MAIN APPLICATION CONTENT NODE FRAME */
-        #main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            height: 100%;
-        }
-
-        /* Top Bar Branding and Quick Utility Actions Container */
-        .top-navbar {
-            height: 60px;
-            padding: 0 25px;
+        /* Top Navigation Header */
+        .header-bar {
+            padding: 12px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(6, 6, 12, 0.5);
+            background: rgba(12, 12, 22, 0.8);
             backdrop-filter: blur(10px);
+            z-index: 100;
         }
 
-        .logo-area {
+        .logo-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 700;
             background: linear-gradient(to right, #ffffff, var(--neon-cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .brand-credit {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1rem;
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .credit-label {
+            font-size: 0.9rem;
             letter-spacing: 1px;
             opacity: 0.7;
         }
 
-        .util-controls { display: flex; gap: 10px; }
-        .util-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .action-circle-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
             width: 36px;
             height: 36px;
@@ -162,121 +77,166 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .util-btn:hover { border-color: var(--neon-purple); color: var(--neon-cyan); }
 
-        /* Chat Workspace Engine Log Panel */
-        .chat-history-log {
-            flex: 1;
-            overflow-y: auto;
-            padding: 30px;
+        .action-circle-btn:hover {
+            border-color: var(--neon-purple);
+            color: var(--neon-cyan);
+        }
+
+        /* Interactive Setup Guide Ribbon Card */
+        #setup-wizard-banner {
+            background: linear-gradient(135deg, rgba(20, 10, 35, 0.95), rgba(10, 20, 40, 0.95));
+            border-bottom: 2px solid var(--neon-purple);
+            padding: 15px 20px;
             box-sizing: border-box;
+            font-size: 0.95rem;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
 
-        .chat-row {
+        .wizard-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .wizard-instruction-link {
+            color: var(--neon-cyan);
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .key-entry-input {
+            width: 100%;
+            background: #090912;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            outline: none;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .key-entry-input:focus {
+            border-color: var(--neon-cyan);
+        }
+
+        /* Scrollable Chat Workspace Window Area */
+        .chat-view-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-sizing: border-box;
+        }
+
+        .chat-bubble-row {
             display: flex;
             width: 100%;
-            margin-bottom: 5px;
         }
 
-        .chat-row.user-row { justify-content: flex-end; }
-        .chat-row.ai-row { justify-content: flex-start; }
+        .chat-bubble-row.user-style { justify-content: flex-end; }
+        .chat-bubble-row.ai-style { justify-content: flex-start; }
 
-        .chat-bubble {
-            max-width: 75%;
-            padding: 14px 18px;
-            border-radius: 18px;
-            line-height: 1.5;
-            font-size: 1rem;
+        .chat-bubble-box {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 1.05rem;
+            line-height: 1.4;
             word-wrap: break-word;
         }
 
-        .user-row .chat-bubble {
-            background-color: var(--chat-bubble-user);
+        .user-style .chat-bubble-box {
+            background-color: var(--chat-user);
             border-bottom-right-radius: 4px;
             border: 1px solid rgba(188, 19, 254, 0.2);
         }
 
-        .ai-row .chat-bubble {
-            background-color: var(--chat-bubble-ai);
+        .ai-style .chat-bubble-box {
+            background-color: var(--chat-ai);
             border-bottom-left-radius: 4px;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Attached image item block */
-        .preview-img-chat {
-            max-width: 200px;
+        /* Image Display Attachments within Logs */
+        .chat-image-preview {
+            max-width: 100%;
             border-radius: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: block;
         }
 
-        /* Advanced Processing State Status pulses */
-        .status-container {
+        /* Live Processing Anim Banner HUD */
+        #processing-status-hud {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(0, 245, 255, 0.03);
             border: 1px solid rgba(0, 245, 255, 0.15);
+            border-radius: 20px;
             width: fit-content;
-            margin-left: 30px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
+            margin-left: 20px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
             font-family: 'Orbitron', sans-serif;
             color: var(--neon-cyan);
         }
 
-        .status-pulse-dot {
-            width: 8px;
-            height: 8px;
+        .pulse-core-dot {
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background-color: var(--neon-cyan);
-            animation: pulse-glow 1.4s infinite ease-in-out;
+            animation: pulse-glow-anim 1.2s infinite ease-in-out;
         }
 
-        @keyframes pulse-glow {
-            0%, 100% { transform: scale(0.8); opacity: 0.5; box-shadow: 0 0 0 0 rgba(0,245,255,0.7); }
-            50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 8px 3px rgba(0,245,255,0.4); }
+        @keyframes pulse-glow-anim {
+            0%, 100% { transform: scale(0.8); opacity: 0.4; }
+            50% { transform: scale(1.2); opacity: 1; }
         }
 
-        /* Bottom Fixed Input Box Control Station Wrapper Layout */
-        .input-control-wrapper {
-            padding: 20px 30px 30px 30px;
-            background: linear-gradient(transparent, var(--bg-deep) 40%);
+        /* Fixed Footer Message Launcher Hub Layout */
+        .footer-launcher-dock {
+            padding: 15px 20px 25px 20px;
+            background: #0c0c16;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .input-bar-inner {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #111122;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 8px 16px;
+        .launcher-input-row {
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-sizing: border-box;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            gap: 10px;
+            background: #121224;
+            border-radius: 20px;
+            padding: 6px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .input-bar-inner:focus-within {
+        .launcher-input-row:focus-within {
             border-color: var(--neon-purple);
-            box-shadow: 0 0 15px rgba(188, 19, 254, 0.2);
         }
 
-        .action-icon-input {
+        .launcher-utility-icon {
             color: rgba(255, 255, 255, 0.5);
             font-size: 1.2rem;
             cursor: pointer;
             transition: color 0.2s;
         }
-        .action-icon-input:hover { color: var(--neon-cyan); }
 
-        .chat-text-area {
+        .launcher-utility-icon:hover { color: var(--neon-cyan); }
+
+        .launcher-textarea {
             flex: 1;
             background: transparent;
             border: none;
@@ -286,356 +246,223 @@
             font-size: 1rem;
             padding: 8px 0;
             resize: none;
-            max-height: 100px;
+            height: 24px;
+            max-height: 80px;
         }
 
-        /* Image Attachment Preview Ribbon Tray */
-        #attachment-preview-tray {
-            max-width: 800px;
-            margin: 0 auto 8px auto;
+        #media-preview-ribbon {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            margin-bottom: 8px;
         }
 
-        .attached-preview-item {
+        .ribbon-item-box {
             position: relative;
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
             border: 1px solid var(--neon-cyan);
             overflow: hidden;
         }
 
-        .attached-preview-item img { width: 100%; height: 100%; object-fit: cover; }
-        .attached-preview-item .remove-badge {
-            position: absolute; top: 2px; right: 2px;
+        .ribbon-item-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .ribbon-item-box .kill-badge {
+            position: absolute; top: 1px; right: 1px;
             background: black; color: white; border-radius: 50%;
-            width: 16px; height: 16px; font-size: 0.65rem;
+            width: 14px; height: 14px; font-size: 0.6rem;
             display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
 
-        /* Settings Module Config Drawer Overlay */
-        #api-drawer {
-            position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
-            background: #121225; border: 1px solid var(--neon-purple);
-            border-radius: 12px; padding: 10px 20px; display: flex; align-items: center;
-            gap: 15px; z-index: 5000; box-shadow: 0 4px 20px black;
-        }
-        #api-drawer input {
-            background: black; border: 1px solid rgba(255,255,255,0.2);
-            color: white; border-radius: 6px; padding: 6px 12px; font-size: 0.85rem; outline: none;
-        }
-
-        /* Responsive Layout Overrides */
-        @media(max-width: 768px) {
-            #sidebar { display: none; }
-            .brand-credit { display: none; }
-        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div id="api-drawer">
-        <span style="font-size:0.8rem; font-family:'Orbitron'; color:var(--neon-cyan)">GEMINI KEY:</span>
-        <input type="password" id="api-key-field" placeholder="Paste free API key here..." onchange="lockApiKey(this.value)">
+    <!-- Header Panel -->
+    <div class="header-bar">
+        <div class="logo-title">PlayzAi</div>
+        <div class="header-right">
+            <div class="credit-label">MADE BY RKANSHPLAYZ</div>
+            <button class="action-circle-btn" onclick="toggleSetupGuide()" title="Setup Guide Menu"><i class="fa-solid fa-gear"></i></button>
+            <button class="action-circle-btn" onclick="location.reload()" title="Refresh Interface"><i class="fa-solid fa-rotate-right"></i></button>
+        </div>
     </div>
 
-    <div id="sidebar">
-        <button class="new-chat-btn" onclick="startNewBlankChatThread()">
-            <i class="fa-solid fa-plus"></i> NEW CHAT
-        </button>
-        <div class="history-title">Saved Discussions</div>
-        <div class="history-section" id="sidebar-history-target"></div>
+    <!-- Active User Setup Instruction Guide Card Banner -->
+    <div id="setup-wizard-banner">
+        <div class="wizard-row">
+            <span style="font-family:'Orbitron'; font-weight:bold; color:var(--neon-purple)">💡 UNLOCK CHAT ENGINE ACCESS:</span>
+            <a href="https://aistudio.google.com/" target="_blank" class="wizard-instruction-link">Get Free Key <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem"></i></a>
+        </div>
+        <div style="font-size:0.85rem; opacity:0.7; margin-bottom:4px;">Tap the link, hit "Create API Key", and paste the code token below:</div>
+        <input type="password" class="key-entry-input" id="secure-key-node" placeholder="Paste free key token here to start chat..." onchange="commitKeyToStorage(this.value)">
     </div>
 
-    <div id="main-content">
-        <div class="top-navbar">
-            <div class="logo-area">PlayzAi</div>
-            <div class="brand-credit">MADE BY RKANSHPLAYZ</div>
-            <div class="util-controls">
-                <button class="util-btn" onclick="location.reload()" title="Reset Interface Container"><i class="fa-solid fa-rotate-right"></i></button>
-                <button class="util-btn" id="share-link-btn" onclick="copyInterfaceLink()" title="Copy Application URL Link"><i class="fa-solid fa-share-nodes"></i></button>
+    <!-- Scrollable Dialog Panel Layer Frame -->
+    <div class="chat-view-container" id="chat-scroller-layer">
+        <div class="chat-bubble-row ai-style">
+            <div class="chat-bubble-box">
+                👋 Welcome to **PlayzAi**! To start chatting instantly, tap the small ⚙️ gear icon in the top corner, click the "Get Free Key" link to copy your token, and paste it into the slot! Once done, you're ready to go!
             </div>
         </div>
+    </div>
 
-        <div class="chat-history-log" id="chat-output-frame"></div>
+    <!-- Status Engine Banner HUD Notification Layer -->
+    <div id="processing-status-hud" class="hidden">
+        <div class="pulse-core-dot"></div>
+        <span id="status-string-text">Searching web records...</span>
+    </div>
 
-        <div class="status-container hidden" id="engine-status-banner">
-            <div class="status-pulse-dot"></div>
-            <span id="status-display-text">Thinking...</span>
-        </div>
-
-        <div class="input-control-wrapper">
-            <div id="attachment-preview-tray"></div>
+    <!-- Fixed Footer Launcher Engine Dock Module -->
+    <div class="footer-launcher-dock">
+        <div id="media-preview-ribbon"></div>
+        <div class="launcher-input-row">
+            <input type="file" id="image-file-node" accept="image/*" class="hidden" onchange="extractImagePayloadData(this)">
+            <i class="fa-solid fa-plus launcher-utility-icon" onclick="document.getElementById('image-file-node').click()" title="Attach Photo Context"></i>
             
-            <div class="input-bar-inner">
-                <input type="file" id="media-uploader" accept="image/*" class="hidden" onchange="processImageAttachment(this)">
-                <i class="fa-solid fa-plus action-icon-input" onclick="document.getElementById('media-uploader').click()" title="Attach File Images Context"></i>
-                
-                <textarea class="chat-text-area" id="user-chat-input" rows="1" placeholder="Ask PlayzAi anything..." onkeydown="handleInputKeyReturn(event)"></textarea>
-                <i class="fa-solid fa-paper-plane action-icon-input" style="color:var(--neon-purple)" onclick="transmitUserPayloadMessage()"></i>
-            </div>
+            <textarea class="launcher-textarea" id="chat-prompt-field" placeholder="Message PlayzAi..." onkeydown="interceptFieldKeydown(event)"></textarea>
+            <i class="fa-solid fa-paper-plane launcher-utility-icon" style="color:var(--neon-purple)" onclick="transmitMessageDataPayload()"></i>
         </div>
     </div>
 
     <script>
-        // System Data Management Properties
-        let conversations = {};
-        let activeChatId = "";
-        let globalAttachedBase64Image = "";
+        let base64ImageString = "";
+        const trackingMessages = ["🔍 Searching website records...", "🧠 Thinking...", "📊 Analyzing data nodes..."];
 
-        // Status processing pipeline state string mappings arrays
-        const thinkingPipelines = ["🔍 Searching website records...", "🧠 Thinking...", "📊 Analyzing data nodes..."];
-
-        window.addEventListener('DOMContentLoaded', () => {
-            // Restore structural values profiles out of localStorage
-            const cachedLogs = localStorage.getItem('playzai_history');
-            const cachedKey = localStorage.getItem('playzai_gemini_key');
-            
-            if(cachedKey) document.getElementById('api-key-field').value = cachedKey;
-            
-            if(cachedLogs) {
-                conversations = JSON.parse(cachedLogs);
-                const keys = Object.keys(conversations);
-                if(keys.length > 0) {
-                    loadSelectedChatThread(keys[0]);
-                } else {
-                    startNewBlankChatThread();
-                }
-            } else {
-                startNewBlankChatThread();
+        window.onload = () => {
+            const preservedKey = localStorage.getItem('playzai_key_token');
+            if (preservedKey) {
+                document.getElementById('secure-key-node').value = preservedKey;
+                document.getElementById('setup-wizard-banner').classList.add('hidden');
             }
-            refreshSidebarLogsUI();
-        });
+        };
 
-        function lockApiKey(val) {
-            localStorage.setItem('playzai_gemini_key', val.trim());
+        function toggleSetupGuide() {
+            const banner = document.getElementById('setup-wizard-banner');
+            banner.classList.toggle('hidden');
         }
 
-        // Sidebar Context Threads Operations Controllers
-        function startNewBlankChatThread() {
-            activeChatId = "chat_" + new Date().getTime();
-            conversations[activeChatId] = {
-                title: "New Dialogue Log Thread",
-                messages: [{ role: "model", text: "Hello! I am PlayzAi. Ask me anything, attach pictures, or manage conversations right here." }]
-            };
-            saveConversationsState();
-            loadSelectedChatThread(activeChatId);
+        function commitKeyToStorage(val) {
+            localStorage.setItem('playzai_key_token', val.trim());
+            if (val.trim()) document.getElementById('setup-wizard-banner').classList.add('hidden');
         }
 
-        function loadSelectedChatThread(chatId) {
-            activeChatId = chatId;
-            refreshSidebarLogsUI();
-            
-            const logWindow = document.getElementById('chat-output-frame');
-            logWindow.innerHTML = "";
-            
-            conversations[activeChatId].messages.forEach(msg => {
-                appendBubbleToWindow(msg.role, msg.text, msg.image);
-            });
-            scrollLogToBottomViewport();
-        }
-
-        function renameChatThread(chatId, e) {
-            e.stopPropagation();
-            const currentTitle = conversations[chatId].title;
-            const renamed = prompt("Enter new title for this chat thread:", currentTitle);
-            if(renamed && renamed.trim()) {
-                conversations[chatId].title = renamed.trim();
-                saveConversationsState();
-                refreshSidebarLogsUI();
-            }
-        }
-
-        function purgeChatThread(chatId, e) {
-            e.stopPropagation();
-            if(confirm("Confirm deletion of this saved chat logs profile thread?")) {
-                delete conversations[chatId];
-                saveConversationsState();
-                const remaining = Object.keys(conversations);
-                if(remaining.length > 0) loadSelectedChatThread(remaining[0]);
-                else startNewBlankChatThread();
-            }
-        }
-
-        function saveConversationsState() {
-            localStorage.setItem('playzai_history', JSON.stringify(conversations));
-        }
-
-        function refreshSidebarLogsUI() {
-            const container = document.getElementById('sidebar-history-target');
-            container.innerHTML = "";
-
-            Object.keys(conversations).forEach(id => {
-                const item = document.createElement('div');
-                item.className = `history-item ${id === activeChatId ? 'active' : ''}`;
-                item.onclick = () => loadSelectedChatThread(id);
-                
-                item.innerHTML = `
-                    <div class="history-item-text"><i class="fa-regular fa-message" style="margin-right:8px; opacity:0.5"></i>${conversations[id].title}</div>
-                    <div class="history-actions">
-                        <i class="fa-solid fa-pen" onclick="renameChatThread('${id}', event)"></i>
-                        <i class="fa-solid fa-trash" onclick="purgeChatThread('${id}', event)"></i>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        // Image Attachment Extraction Engine Setup
-        function processImageAttachment(uploader) {
-            const file = uploader.files[0];
-            if(!file) return;
+        function extractImagePayloadData(input) {
+            const file = input.files[0];
+            if (!file) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                globalAttachedBase64Image = e.target.result;
-                const tray = document.getElementById('attachment-preview-tray');
-                tray.innerHTML = `
-                    <div class="attached-preview-item">
-                        <img src="${globalAttachedBase64Image}">
-                        <div class="remove-badge" onclick="clearAttachmentTray()"><i class="fa-solid fa-xmark"></i></div>
+                base64ImageString = e.target.result;
+                document.getElementById('media-preview-ribbon').innerHTML = `
+                    <div class="ribbon-item-box">
+                        <img src="${base64ImageString}">
+                        <div class="kill-badge" onclick="clearRibbonTray()"><i class="fa-solid fa-xmark"></i></div>
                     </div>
                 `;
             };
             reader.readAsDataURL(file);
         }
 
-        function clearAttachmentTray() {
-            globalAttachedBase64Image = "";
-            document.getElementById('attachment-preview-tray').innerHTML = "";
-            document.getElementById('media-uploader').value = "";
+        function clearRibbonTray() {
+            base64ImageString = "";
+            document.getElementById('media-preview-ribbon').innerHTML = "";
+            document.getElementById('image-file-node').value = "";
         }
 
-        // Transmit Messages Input Pipelines
-        function handleInputKeyReturn(e) {
-            if(e.key === 'Enter' && !e.shiftKey) {
+        function interceptFieldKeydown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                transmitUserPayloadMessage();
+                transmitMessageDataPayload();
             }
         }
 
-        async function transmitUserPayloadMessage() {
-            const inputField = document.getElementById('user-chat-input');
-            const userText = inputField.value.trim();
-            if(!userText && !globalAttachedBase64Image) return;
-
-            // Append input metrics logs structures to data trees profiles
-            appendBubbleToWindow("user", userText, globalAttachedBase64Image);
-            conversations[activeChatId].messages.push({
-                role: "user", text: userText, image: globalAttachedBase64Image
-            });
-
-            // Auto title chat threads based on initial prompt entries context elements
-            if(conversations[activeChatId].title === "New Dialogue Log Thread") {
-                conversations[activeChatId].title = userText.substring(0, 22) + "...";
-            }
-
-            // Clear input forms
-            inputField.value = "";
-            const activeImg = globalAttachedBase64Image;
-            clearAttachmentTray();
-            saveConversationsState();
-            refreshSidebarLogsUI();
-
-            // Run Gemini status sequence triggers
-            await executeStatusPipelineAnimations();
-
-            // Fire Gemini AI API calling node pipelines
-            await fetchGeminiAIModelResponse(userText, activeImg);
-        }
-
-        function appendBubbleToWindow(role, text, imageBase64) {
-            const frame = document.getElementById('chat-output-frame');
+        function insertChatBubbleUI(role, text, imageSrc) {
+            const scroller = document.getElementById('chat-scroller-layer');
             const row = document.createElement('div');
-            row.className = `chat-row ${role === 'user' ? 'user-row' : 'ai-row'}`;
+            row.className = `chat-bubble-row ${role === 'user' ? 'user-style' : 'ai-style'}`;
             
-            let innerContent = "";
-            if(imageBase64) innerContent += `<img src="${imageBase64}" class="preview-img-chat">`;
-            if(text) innerContent += `<div>${text.replace(/\n/g, '<br>')}</div>`;
+            let htmlBuffer = "";
+            if (imageSrc) htmlBuffer += `<img src="${imageSrc}" class="chat-image-preview">`;
+            if (text) htmlBuffer += `<div>${text.replace(/\n/g, '<br>')}</div>`;
 
-            row.innerHTML = `<div class="chat-bubble">${innerContent}</div>`;
-            frame.appendChild(row);
-            scrollLogToBottomViewport();
+            row.innerHTML = `<div class="chat-bubble-box">${htmlBuffer}</div>`;
+            scroller.appendChild(row);
+            scroller.scrollTop = scroller.scrollHeight;
         }
 
-        function scrollLogToBottomViewport() {
-            const frame = document.getElementById('chat-output-frame');
-            frame.scrollTop = frame.scrollHeight;
-        }
+        async function runHudProcessingSequence() {
+            const hud = document.getElementById('processing-status-hud');
+            const label = document.getElementById('status-string-text');
+            hud.classList.remove('hidden');
 
-        // Run sequential text flashes for core statuses models
-        async function executeStatusPipelineAnimations() {
-            const banner = document.getElementById('engine-status-banner');
-            const textNode = document.getElementById('status-display-text');
-            banner.classList.remove('hidden');
-
-            for (let status of thinkingPipelines) {
-                textNode.innerText = status;
-                await new Promise(r => setTimeout(r, 900));
+            for (let message of trackingMessages) {
+                label.innerText = message;
+                await new Promise(r => setTimeout(r, 800));
             }
         }
 
-        // Fetch Data out of Official Gemini Rest API Nodes Serverless structures
-        async function fetchGeminiAIModelResponse(promptText, imageBase64) {
-            const banner = document.getElementById('engine-status-banner');
-            const apiKey = localStorage.getItem('playzai_gemini_key');
-            
-            if(!apiKey) {
-                banner.classList.add('hidden');
-                appendBubbleToWindow("model", "API Error: Please enter your Google Gemini API Key into the top configuration drawer box to initialize conversational layers.");
+        async function transmitMessageDataPayload() {
+            const inputElement = document.getElementById('chat-prompt-field');
+            const promptValue = inputElement.value.trim();
+            const token = localStorage.getItem('playzai_key_token');
+
+            if (!promptValue && !base64ImageString) return;
+            if (!token) {
+                alert("Please click the ⚙️ gear icon and paste your free key first!");
+                document.getElementById('setup-wizard-banner').classList.remove('hidden');
                 return;
             }
 
-            try {
-                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-                let payload = {};
+            insertChatBubbleUI("user", promptValue, base64ImageString);
+            inputElement.value = "";
+            
+            const temporaryImageCache = base64ImageString;
+            clearRibbonTray();
 
-                if(imageBase64) {
-                    // Vision processing array matrix conversions
-                    const rawBase64 = imageBase64.split(',')[1];
-                    payload = {
+            // Run process banner state changes
+            await runHudProcessingSequence();
+
+            const hudElement = document.getElementById('processing-status-hud');
+
+            try {
+                let targetEndpointUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${token}`;
+                let contextPayload = {};
+
+                if (temporaryImageCache) {
+                    const extractedBase64Data = temporaryImageCache.split(',')[1];
+                    contextPayload = {
                         contents: [{
                             parts: [
-                                { text: promptText || "Analyze this image context." },
-                                { inlineData: { mimeType: "image/jpeg", data: rawBase64 } }
+                                { text: promptValue || "Analyze this file." },
+                                { inlineData: { mimeType: "image/jpeg", data: extractedBase64Data } }
                             ]
                         }]
                     };
                 } else {
-                    // Standard prompt mapping configuration entries arrays layers
-                    payload = { contents: [{ parts: [{ text: promptText }] }] };
+                    contextPayload = { contents: [{ parts: [{ text: promptValue }] }] };
                 }
 
-                const res = await fetch(url, {
+                const networkResponse = await fetch(targetEndpointUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(contextPayload)
                 });
-                
-                const data = await res.json();
-                banner.classList.add('hidden');
 
-                const outputText = data.candidates[0].content.parts[0].text;
-                appendBubbleToWindow("model", outputText);
-                
-                conversations[activeChatId].messages.push({ role: "model", text: outputText });
-                saveConversationsState();
+                const parsedData = await networkResponse.json();
+                hudElement.classList.add('hidden');
 
-            } catch(e) {
-                banner.classList.add('hidden');
-                appendBubbleToWindow("model", "Error contacting Gemini engine servers. Check API key validity rules settings parameters layers.");
+                const answerText = parsedData.candidates[0].content.parts[0].text;
+                insertChatBubbleUI("model", answerText);
+
+            } catch (err) {
+                hudElement.classList.add('hidden');
+                insertChatBubbleUI("model", "Configuration Error: Connection dropped or key expired. Tap the gear icon to reset.");
             }
         }
-
-        // Top Controls Scripts Engines
-        function copyInterfaceLink() {
-            const btn = document.getElementById('share-link-btn');
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                btn.innerHTML = '<i class="fa-solid fa-check" style="color:#00ff88"></i>';
-                setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-share-nodes"></i>'; }, 2000);
-            });
-        }
     </script>
+
 </body>
 </html>
+
