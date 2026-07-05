@@ -7,17 +7,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --bg-deep: #06060c;
-            --neon-purple: #bc13fe;
-            --neon-cyan: #00f5ff;
-            --chat-user: #261640;
-            --chat-ai: #121224;
-        }
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--bg-deep);
+            background-color: #06060c;
             color: #f1f2f6;
             font-family: 'Rajdhani', sans-serif;
             display: flex;
@@ -43,7 +36,7 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(to right, #ffffff, var(--neon-cyan));
+            background: linear-gradient(to right, #ffffff, #00f5ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -70,12 +63,12 @@
             word-wrap: break-word;
         }
         .user-style .chat-bubble-box {
-            background-color: var(--chat-user);
+            background-color: #261640;
             border-bottom-right-radius: 4px;
             border: 1px solid rgba(188, 19, 254, 0.2);
         }
         .ai-style .chat-bubble-box {
-            background-color: var(--chat-ai);
+            background-color: #121224;
             border-bottom-left-radius: 4px;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
@@ -95,7 +88,7 @@
             border: 1px solid rgba(0, 245, 255, 0.2);
             width: fit-content;
             font-size: 0.9rem;
-            color: var(--neon-cyan);
+            color: #00f5ff;
             position: fixed;
             bottom: 85px;
             left: 20px;
@@ -139,7 +132,7 @@
         }
         #media-preview-ribbon { display: flex; gap: 8px; margin-bottom: 6px; }
         .ribbon-item-box {
-            position: relative; width: 50px; height: 50px; border-radius: 8px; border: 1px solid var(--neon-cyan); overflow: hidden;
+            position: relative; width: 50px; height: 50px; border-radius: 8px; border: 1px solid #00f5ff; overflow: hidden;
         }
         .ribbon-item-box img { width: 100%; height: 100%; object-fit: cover; }
         .ribbon-item-box .kill-badge {
@@ -159,7 +152,7 @@
     <div class="chat-view-container" id="chat-scroller-layer">
         <div class="chat-bubble-row ai-style">
             <div class="chat-bubble-box">
-                Hello! I am PlayzAi. The chat container is moved up perfectly. Tap the plus button to attach pictures and let's talk!
+                Hello! I am PlayzAi. The chat box is up. Click the plus button to attach pictures!
             </div>
         </div>
     </div>
@@ -174,18 +167,13 @@
             <input type="file" id="image-file-node" accept="image/*" class="hidden" onchange="extractImagePayloadData(this)">
             <i class="fa-solid fa-plus launcher-utility-icon" onclick="document.getElementById('image-file-node').click()"></i>
             <textarea class="launcher-textarea" id="chat-prompt-field" placeholder="Message PlayzAi..."></textarea>
-            <i class="fa-solid fa-paper-plane launcher-utility-icon" style="color:var(--neon-purple)" onclick="transmitMessageDataPayload()"></i>
+            <i class="fa-solid fa-paper-plane launcher-utility-icon" style="color:#bc13fe" onclick="transmitMessageDataPayload()"></i>
         </div>
     </div>
 
     <script>
         var b64Img = "";
-        
-        // 🔒 INSTRUCTIONS:
-        // 1. Go back to Google AI Studio, copy your FULL API key.
-        // 2. Go to base64encode.org, paste the FULL key and encode it.
-        // 3. Paste that full long scrambled result inside the quotes below:
-        var keyStr = "PASTE_YOUR_FULL_ENCODED_KEY_HERE";
+        var keyStr = "QVEuQWI4Uk42TGJ4cXNlMlMzR3c5RzJuaVFMeTMtUTVIYmZ1T3EyR2k0a0gyaGxMZkhoVkE=";
 
         document.getElementById('chat-prompt-field').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -240,7 +228,7 @@
             hud.classList.remove('hidden');
 
             try {
-                var steps = ["🔍 Searching...", "🧠 Thinking...", "📊 Analyzing..."];
+                var steps = ["Searching...", "Thinking...", "Analyzing..."];
                 for(var i=0; i<steps.length; i++) {
                     txtNode.innerText = steps[i];
                     await new Promise(function(r){setTimeout(r,400);});
@@ -275,9 +263,10 @@
                 insertChatBubbleUI("model", aiResponse);
             } catch (err) {
                 hud.classList.add('hidden');
-                insertChatBubbleUI("model", "Please make sure your full encoded key is pasted correctly inside line 125 of your code!");
+                insertChatBubbleUI("model", "Connection issue. Please resend message.");
             }
         }
     </script>
 </body>
 </html>
+
