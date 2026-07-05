@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PlayzAi</title>
+    <title>PlayzAi Core</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -40,7 +40,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        #setup-wizard-banner {
+        #key-panel-vault {
             background: #0f0f1f;
             border-bottom: 2px solid #bc13fe;
             padding: 15px 20px;
@@ -52,7 +52,7 @@
             margin-top: 55px;
             z-index: 110;
         }
-        .key-entry-input {
+        .vault-input {
             width: 100%;
             background: #05050a;
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -180,28 +180,28 @@
         <div class="logo-title">PlayzAi</div>
         <div style="display: flex; gap: 8px; align-items: center;">
             <div style="font-size: 0.9rem; opacity: 0.7;">MADE BY RKANSHPLAYZ</div>
-            <button class="action-circle-btn" onclick="toggleSetup()"><i class="fa-solid fa-gear"></i></button>
+            <button class="action-circle-btn" onclick="toggleVault()"><i class="fa-solid fa-key"></i></button>
         </div>
     </div>
 
-    <div id="setup-wizard-banner">
+    <div id="key-panel-vault">
         <div style="display: flex; justify-content: space-between; font-weight: bold; color: #bc13fe;">
-            <span>🔑 ENTER CURRENT API KEY:</span>
-            <a href="https://aistudio.google.com/" target="_blank" style="color: #00f5ff; text-decoration: none;">Get Key &rarr;</a>
+            <span>🔑 SETUP DEV API KEY:</span>
+            <a href="https://aistudio.google.com/" target="_blank" style="color: #00f5ff; text-decoration: none;">Get Key Panel &rarr;</a>
         </div>
-        <input type="password" class="key-entry-input" id="secure-key-node" placeholder="Paste your raw AQ.Ab8RN... key here" onchange="commitKeyToStorage(this.value)">
+        <input type="password" class="vault-input" id="vault-key-field" placeholder="Paste uncut AQ.Ab8RN... key text here" onchange="storeVaultKey(this.value)">
     </div>
 
     <div class="chat-view-container" id="chat-scroller-layer">
         <div class="chat-bubble-row ai-style">
             <div class="chat-bubble-box">
-                Hello! I am PlayzAi. To start chatting safely, click the ⚙️ gear icon at the top right, paste your raw API key directly from Google AI Studio, and hit anywhere to save!
+                System Initialized. Tap the 🔑 key icon on the top right to paste your raw uncut Gemini API key directly to save your local channel.
             </div>
         </div>
     </div>
 
     <div id="processing-status-hud" class="hidden">
-        <span id="status-string-text">Thinking...</span>
+        <span id="status-string-text">Processing...</span>
     </div>
 
     <div class="footer-launcher-dock">
@@ -209,7 +209,7 @@
         <div class="launcher-input-row">
             <input type="file" id="image-file-node" accept="image/*" class="hidden" onchange="extractImagePayloadData(this)">
             <i class="fa-solid fa-plus launcher-utility-icon" onclick="document.getElementById('image-file-node').click()"></i>
-            <textarea class="launcher-textarea" id="chat-prompt-field" placeholder="Message PlayzAi..."></textarea>
+            <textarea class="launcher-textarea" id="chat-prompt-field" placeholder="Send prompt payload..."></textarea>
             <i class="fa-solid fa-paper-plane launcher-utility-icon" style="color:#bc13fe" onclick="transmitMessageDataPayload()"></i>
         </div>
     </div>
@@ -218,20 +218,20 @@
         var b64Img = "";
 
         window.onload = function() {
-            var savedKey = localStorage.getItem('playzai_key_token');
-            if (savedKey) {
-                document.getElementById('secure-key-node').value = savedKey;
-                document.getElementById('setup-wizard-banner').classList.add('hidden');
+            var cachedKey = localStorage.getItem('active_vault_token');
+            if (cachedKey) {
+                document.getElementById('vault-key-field').value = cachedKey;
+                document.getElementById('key-panel-vault').classList.add('hidden');
             }
         };
 
-        function toggleSetup() {
-            document.getElementById('setup-wizard-banner').classList.toggle('hidden');
+        function toggleVault() {
+            document.getElementById('key-panel-vault').classList.toggle('hidden');
         }
 
-        function commitKeyToStorage(val) {
-            localStorage.setItem('playzai_key_token', val.trim());
-            if (val.trim()) document.getElementById('setup-wizard-banner').classList.add('hidden');
+        function storeVaultKey(val) {
+            localStorage.setItem('active_vault_token', val.trim());
+            if (val.trim()) document.getElementById('key-panel-vault').classList.add('hidden');
         }
 
         document.getElementById('chat-prompt-field').addEventListener('keydown', function(e) {
@@ -274,12 +274,12 @@
         async function transmitMessageDataPayload() {
             var inputElement = document.getElementById('chat-prompt-field');
             var promptValue = inputElement.value.trim();
-            var token = localStorage.getItem('playzai_key_token');
+            var activeToken = localStorage.getItem('active_vault_token');
 
             if (!promptValue && !b64Img) return;
-            if (!token) {
-                alert("Please click the gear icon and add your API key first!");
-                document.getElementById('setup-wizard-banner').classList.remove('hidden');
+            if (!activeToken) {
+                alert("Key required. Open key config.");
+                document.getElementById('key-panel-vault').classList.remove('hidden');
                 return;
             }
 
@@ -294,13 +294,8 @@
             hud.classList.remove('hidden');
 
             try {
-                var steps = ["Searching...", "Thinking...", "Analyzing..."];
-                for(var i=0; i<steps.length; i++) {
-                    txtNode.innerText = steps[i];
-                    await new Promise(function(r){setTimeout(r,400);});
-                }
-
-                var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + token;
+                txtNode.innerText = "Processing...";
+                var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + activeToken;
                 var payload = { contents: [{ parts: [{ text: promptValue }] }] };
 
                 if (tempImg) {
@@ -326,7 +321,7 @@
                 insertChatBubbleUI("model", aiResponse);
             } catch (err) {
                 hud.classList.add('hidden');
-                insertChatBubbleUI("model", "API Error: Please verify that you copied the complete key string from your Google Studio panel.");
+                insertChatBubbleUI("model", "Request Error: Check input fields and confirm full credential completeness.");
             }
         }
     </script>
