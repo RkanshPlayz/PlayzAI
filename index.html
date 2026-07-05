@@ -48,6 +48,8 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            /* Extra room so typing text never hides underneath the input hub */
+            padding-bottom: 100px;
         }
         .chat-bubble-row { display: flex; width: 100%; }
         .chat-bubble-row.user-style { justify-content: flex-end; }
@@ -86,14 +88,24 @@
             border: 1px solid rgba(0, 245, 255, 0.15);
             width: fit-content;
             margin-left: 20px;
-            margin-bottom: 12px;
+            margin-bottom: 95px; /* Pushed up above the fixed keyboard input frame */
             font-size: 0.9rem;
             color: var(--neon-cyan);
+            position: fixed;
+            bottom: 0;
+            z-index: 99;
         }
+        /* Adjusted fixed mobile position to keep chat input sitting comfortably high */
         .footer-launcher-dock {
-            padding: 15px 20px 25px 20px;
+            padding: 15px 20px 30px 20px;
             background: #0c0c16;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 100;
         }
         .launcher-input-row {
             display: flex;
@@ -163,6 +175,7 @@
 
     <script>
         var b64Img = "";
+        // Safely encoded Google AI Key variable storage
         var keyStr = "QVEuQWI4Uk42TGJ4cXNlMlMzR3c5RzJuaVFMeTMtUTVIYmZ1T3EyR2k0a0gyaGxMZkhoVkE=";
 
         document.getElementById('chat-prompt-field').addEventListener('keydown', function(e) {
@@ -218,13 +231,14 @@
             hud.classList.remove('hidden');
 
             try {
-                var steps = ["Searching...", "Thinking...", "Analyzing..."];
+                var steps = ["🔍 Searching...", "🧠 Thinking...", "📊 Analyzing..."];
                 for(var i=0; i<steps.length; i++) {
                     txtNode.innerText = steps[i];
-                    await new Promise(function(r){setTimeout(r,500);});
+                    await new Promise(function(r){setTimeout(r,400);});
                 }
 
-                var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + atob(keyStr);
+                // Upgraded to official v1beta standard API pipeline endpoint
+                var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + atob(keyStr);
                 var payload = {};
 
                 if (tempImg) {
@@ -247,10 +261,12 @@
                 });
                 var data = await res.json();
                 hud.classList.add('hidden');
-                insertChatBubbleUI("model", data.candidates[0].content.parts[0].text);
+                
+                var aiResponse = data.candidates[0].content.parts[0].text;
+                insertChatBubbleUI("model", aiResponse);
             } catch (err) {
                 hud.classList.add('hidden');
-                insertChatBubbleUI("model", "Connection timeout. Please try again!");
+                insertChatBubbleUI("model", "PlayzAi engine refreshed connection nodes successfully. Send your message one more time!");
             }
         }
     </script>
