@@ -150,7 +150,7 @@
     <div class="chat-view-container" id="chat-scroller-layer">
         <div class="chat-bubble-row ai-style">
             <div class="chat-bubble-box">
-                Hello! I am PlayzAi. Your mobile chat interface is fully updated with the secure key token. Let's test it out!
+                Hello! I am PlayzAi. Let's talk! Click the plus button to attach pictures.
             </div>
         </div>
     </div>
@@ -171,7 +171,9 @@
 
     <script>
         var b64Img = "";
-        var keyStr = "QVEuQWI4Uk42TGJ4cXNlMlMzR3c5RzJuaVFMeTMtUTVIYmZ1T3EyR2k0a0gyaGxMZkhoVkE=";
+        
+        // 🚨 CRITICAL: Drop your full, correct Base64 string from base64encode.org here!
+        var keyStr = "PASTE_YOUR_FULL_CORRECT_BASE64_STRING_HERE";
 
         document.getElementById('chat-prompt-field').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -261,7 +263,7 @@
                 insertChatBubbleUI("model", aiResponse);
             } catch (err) {
                 hud.classList.add('hidden');
-                insertChatBubbleUI("model", "Network latency check. Please click the send button once more!");
+                insertChatBubbleUI("model", "Connection dropped. Check your base64 API key token string on line 125!");
             }
         }
     </script>
