@@ -3,35 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PlayzAi | Mobile AI Assistant</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <title>PlayzAi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         :root {
             --bg-deep: #06060c;
-            --panel-bg: rgba(12, 12, 22, 0.9);
             --neon-purple: #bc13fe;
             --neon-cyan: #00f5ff;
             --chat-user: #261640;
             --chat-ai: #121224;
-            --text-color: #f1f2f6;
         }
-
         body {
             margin: 0;
             padding: 0;
             background-color: var(--bg-deep);
-            color: var(--text-color);
+            color: #f1f2f6;
             font-family: 'Rajdhani', sans-serif;
             display: flex;
             flex-direction: column;
             height: 100vh;
-            width: 100vw;
             overflow: hidden;
         }
-
-        /* Top App Header Dashboard */
         .header-bar {
             padding: 12px 20px;
             display: flex;
@@ -39,9 +32,7 @@
             justify-content: space-between;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             background: #0c0c16;
-            z-index: 100;
         }
-
         .logo-title {
             font-family: 'Orbitron', sans-serif;
             font-size: 1.5rem;
@@ -50,39 +41,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .credit-label {
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            opacity: 0.7;
-        }
-
-        .action-circle-btn {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .action-circle-btn:hover {
-            border-color: var(--neon-purple);
-            color: var(--neon-cyan);
-        }
-
-        /* Scrollable Chat View Log Container */
         .chat-view-container {
             flex: 1;
             overflow-y: auto;
@@ -90,17 +48,10 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            box-sizing: border-box;
         }
-
-        .chat-bubble-row {
-            display: flex;
-            width: 100%;
-        }
-
+        .chat-bubble-row { display: flex; width: 100%; }
         .chat-bubble-row.user-style { justify-content: flex-end; }
         .chat-bubble-row.ai-style { justify-content: flex-start; }
-
         .chat-bubble-box {
             max-width: 85%;
             padding: 12px 16px;
@@ -109,63 +60,41 @@
             line-height: 1.4;
             word-wrap: break-word;
         }
-
         .user-style .chat-bubble-box {
             background-color: var(--chat-user);
             border-bottom-right-radius: 4px;
             border: 1px solid rgba(188, 19, 254, 0.2);
         }
-
         .ai-style .chat-bubble-box {
             background-color: var(--chat-ai);
             border-bottom-left-radius: 4px;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
-
         .chat-image-preview {
             max-width: 100%;
             border-radius: 8px;
             margin-bottom: 6px;
             display: block;
         }
-
-        /* Dynamic Status Engine Indicator Panel Layout */
         #processing-status-hud {
             display: flex;
             align-items: center;
             gap: 10px;
             padding: 10px 18px;
+            border-radius: 20px;
             background: rgba(0, 245, 255, 0.03);
             border: 1px solid rgba(0, 245, 255, 0.15);
-            border-radius: 20px;
             width: fit-content;
             margin-left: 20px;
             margin-bottom: 12px;
             font-size: 0.9rem;
-            font-family: 'Orbitron', sans-serif;
             color: var(--neon-cyan);
         }
-
-        .pulse-core-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--neon-cyan);
-            animation: pulse-glow-anim 1.2s infinite ease-in-out;
-        }
-
-        @keyframes pulse-glow-anim {
-            0%, 100% { transform: scale(0.8); opacity: 0.4; }
-            50% { transform: scale(1.2); opacity: 1; }
-        }
-
-        /* Fixed Bottom Launcher Input Container Box */
         .footer-launcher-dock {
             padding: 15px 20px 25px 20px;
             background: #0c0c16;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
-
         .launcher-input-row {
             display: flex;
             align-items: center;
@@ -174,22 +103,12 @@
             border-radius: 24px;
             padding: 8px 16px;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
-
-        .launcher-input-row:focus-within {
-            border-color: var(--neon-purple);
-        }
-
         .launcher-utility-icon {
             color: rgba(255, 255, 255, 0.5);
             font-size: 1.25rem;
             cursor: pointer;
-            transition: color 0.2s;
         }
-
-        .launcher-utility-icon:hover { color: var(--neon-cyan); }
-
         .launcher-textarea {
             flex: 1;
             background: transparent;
@@ -198,36 +117,18 @@
             color: white;
             font-family: inherit;
             font-size: 1.05rem;
-            padding: 6px 0;
             resize: none;
             height: 24px;
-            max-height: 100px;
         }
-
-        #media-preview-ribbon {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
+        #media-preview-ribbon { display: flex; gap: 8px; margin-bottom: 8px; }
         .ribbon-item-box {
-            position: relative;
-            width: 55px;
-            height: 55px;
-            border-radius: 8px;
-            border: 1px solid var(--neon-cyan);
-            overflow: hidden;
+            position: relative; width: 55px; height: 55px; border-radius: 8px; border: 1px solid var(--neon-cyan); overflow: hidden;
         }
-
         .ribbon-item-box img { width: 100%; height: 100%; object-fit: cover; }
-        
         .ribbon-item-box .kill-badge {
-            position: absolute; top: 2px; right: 2px;
-            background: black; color: white; border-radius: 50%;
-            width: 16px; height: 16px; font-size: 0.65rem;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            position: absolute; top: 2px; right: 2px; background: black; color: white; border-radius: 50%;
+            width: 16px; height: 16px; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
-
         .hidden { display: none !important; }
     </style>
 </head>
@@ -235,43 +136,34 @@
 
     <div class="header-bar">
         <div class="logo-title">PlayzAi</div>
-        <div class="header-right">
-            <div class="credit-label">MADE BY RKANSHPLAYZ</div>
-            <button class="action-circle-btn" onclick="copySiteLink()" title="Copy Link"><i class="fa-solid fa-share-nodes"></i></button>
-            <button class="action-circle-btn" onclick="location.reload()" title="Refresh Application"><i class="fa-solid fa-rotate-right"></i></button>
-        </div>
+        <div style="font-size: 0.9rem; opacity: 0.7;">MADE BY RKANSHPLAYZ</div>
     </div>
 
     <div class="chat-view-container" id="chat-scroller-layer">
         <div class="chat-bubble-row ai-style">
             <div class="chat-bubble-box">
-                Hello! I am **PlayzAi**. You can talk to me directly, ask questions, or hit the **plus icon (`+`)** below to attach images and test my vision mechanics instantly!
+                Hello! I am PlayzAi. Talk to me or click the plus button to attach pictures!
             </div>
         </div>
     </div>
 
     <div id="processing-status-hud" class="hidden">
-        <div class="pulse-core-dot"></div>
-        <span id="status-string-text">Searching web records...</span>
+        <span id="status-string-text">Thinking...</span>
     </div>
 
     <div class="footer-launcher-dock">
         <div id="media-preview-ribbon"></div>
         <div class="launcher-input-row">
             <input type="file" id="image-file-node" accept="image/*" class="hidden" onchange="extractImagePayloadData(this)">
-            <i class="fa-solid fa-plus launcher-utility-icon" onclick="document.getElementById('image-file-node').click()" title="Attach Photo Image"></i>
-            
+            <i class="fa-solid fa-plus launcher-utility-icon" onclick="document.getElementById('image-file-node').click()"></i>
             <textarea class="launcher-textarea" id="chat-prompt-field" placeholder="Message PlayzAi..."></textarea>
             <i class="fa-solid fa-paper-plane launcher-utility-icon" style="color:var(--neon-purple)" onclick="transmitMessageDataPayload()"></i>
         </div>
     </div>
 
     <script>
-        // 🔒 YOUR SECURELY SCRAMBLED KEY CONTEXT LINK INJECTED HERE:
-        var SECRET_ENCODED_KEY = "QVEuQWI4Uk42TGJ4cXNlMlMzR3c5RzJuaVFMeTMtUTVIYmZ1T3EyR2k0a0gyaGxMZkhoVkE=";
-
-        var base64ImageString = "";
-        var trackingMessages = ["🔍 Searching web records...", "🧠 Thinking...", "📊 Analyzing data nodes..."];
+        var b64Img = "";
+        var keyStr = "QVEuQWI4Uk42TGJ4cXNlMlMzR3c5RzJuaVFMeTMtUTVIYmZ1T3EyR2k0a0gyaGxMZkhoVkE=";
 
         document.getElementById('chat-prompt-field').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -280,29 +172,20 @@
             }
         });
 
-        document.getElementById('chat-prompt-field').addEventListener('input', function() {
-            this.style.height = '24px';
-            this.style.height = Math.min(this.scrollHeight - 12, 100) + 'px';
-        });
-
         function extractImagePayloadData(input) {
             var file = input.files[0];
             if (!file) return;
-
             var reader = new FileReader();
             reader.onload = function(e) {
-                base64ImageString = e.target.result;
+                b64Img = e.target.result;
                 document.getElementById('media-preview-ribbon').innerHTML = 
-                    '<div class="ribbon-item-box">' +
-                        '<img src="' + base64ImageString + '">' +
-                        '<div class="kill-badge" onclick="clearRibbonTray()"><i class="fa-solid fa-xmark"></i></div>' +
-                    '</div>';
+                    '<div class="ribbon-item-box"><img src="' + b64Img + '"><div class="kill-badge" onclick="clearRibbonTray()">&times;</div></div>';
             };
             reader.readAsDataURL(file);
         }
 
         function clearRibbonTray() {
-            base64ImageString = "";
+            b64Img = "";
             document.getElementById('media-preview-ribbon').innerHTML = "";
             document.getElementById('image-file-node').value = "";
         }
@@ -311,85 +194,64 @@
             var scroller = document.getElementById('chat-scroller-layer');
             var row = document.createElement('div');
             row.className = 'chat-bubble-row ' + (role === 'user' ? 'user-style' : 'ai-style');
-            
-            var htmlBuffer = "";
-            if (imageSrc) htmlBuffer += '<img src="' + imageSrc + '" class="chat-image-preview">';
-            if (text) htmlBuffer += '<div>' + text.replace(/\n/g, '<br>') + '</div>';
-
-            row.innerHTML = '<div class="chat-bubble-box">' + htmlBuffer + '</div>';
+            var html = "";
+            if (imageSrc) html += '<img src="' + imageSrc + '" class="chat-image-preview">';
+            if (text) html += '<div>' + text.replace(/\n/g, '<br>') + '</div>';
+            row.innerHTML = '<div class="chat-bubble-box">' + html + '</div>';
             scroller.appendChild(row);
             scroller.scrollTop = scroller.scrollHeight;
-        }
-
-        async function runHudProcessingSequence() {
-            var hud = document.getElementById('processing-status-hud');
-            var label = document.getElementById('status-string-text');
-            hud.classList.remove('hidden');
-
-            for (var i = 0; i < trackingMessages.length; i++) {
-                label.innerText = trackingMessages[i];
-                await new Promise(function(r) { setTimeout(r, 600); });
-            }
         }
 
         async function transmitMessageDataPayload() {
             var inputElement = document.getElementById('chat-prompt-field');
             var promptValue = inputElement.value.trim();
+            if (!promptValue && !b64Img) return;
 
-            if (!promptValue && !base64ImageString) return;
-
-            insertChatBubbleUI("user", promptValue, base64ImageString);
+            insertChatBubbleUI("user", promptValue, b64Img);
             inputElement.value = "";
-            inputElement.style.height = '24px';
             
-            var temporaryImageCache = base64ImageString;
+            var tempImg = b64Img;
             clearRibbonTray();
 
-            await runHudProcessingSequence();
-            var hudElement = document.getElementById('processing-status-hud');
+            var hud = document.getElementById('processing-status-hud');
+            var txtNode = document.getElementById('status-string-text');
+            hud.classList.remove('hidden');
 
             try {
-                // Instantly decodes the secret key token inside browser runtime memory
-                var realDecodedKey = atob(SECRET_ENCODED_KEY);
-                var endpointUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + realDecodedKey;
-                
-                var contextPayload = {};
+                var steps = ["Searching...", "Thinking...", "Analyzing..."];
+                for(var i=0; i<steps.length; i++) {
+                    txtNode.innerText = steps[i];
+                    await new Promise(function(r){setTimeout(r,500);});
+                }
 
-                if (temporaryImageCache) {
-                    var extractedBase64Data = temporaryImageCache.split(',')[1];
-                    contextPayload = {
+                var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + atob(keyStr);
+                var payload = {};
+
+                if (tempImg) {
+                    payload = {
                         contents: [{
                             parts: [
-                                { text: promptValue || "Analyze this file." },
-                                { inlineData: { mimeType: "image/jpeg", data: extractedBase64Data } }
+                                { text: promptValue || "Analyze this image." },
+                                { inlineData: { mimeType: "image/jpeg", data: tempImg.split(',')[1] } }
                             ]
                         }]
                     };
                 } else {
-                    contextPayload = { contents: [{ parts: [{ text: promptValue }] }] };
+                    payload = { contents: [{ parts: [{ text: promptValue }] }] };
                 }
 
-                var networkResponse = await fetch(endpointUrl, {
+                var res = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(contextPayload)
+                    body: JSON.stringify(payload)
                 });
-
-                var parsedData = await networkResponse.json();
-                hudElement.classList.add('hidden');
-                
-                var answerText = parsedData.candidates[0].content.parts[0].text;
-                insertChatBubbleUI("model", answerText);
-
+                var data = await res.json();
+                hud.classList.add('hidden');
+                insertChatBubbleUI("model", data.candidates[0].content.parts[0].text);
             } catch (err) {
-                hudElement.classList.add('hidden');
-                insertChatBubbleUI("model", "PlayzAi is currently building its server connection nodes. Please send your message again in just a moment!");
+                hud.classList.add('hidden');
+                insertChatBubbleUI("model", "Connection timeout. Please try again!");
             }
-        }
-
-        function copySiteLink() {
-            navigator.clipboard.writeText(window.location.href);
-            alert("PlayzAi application sharing link copied successfully!");
         }
     </script>
 </body>
