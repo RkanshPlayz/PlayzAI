@@ -172,8 +172,8 @@
     <script>
         var b64Img = "";
         
-        // 🚨 CRITICAL: Drop your full, correct Base64 string from base64encode.org here!
-        var keyStr = "PASTE_YOUR_FULL_CORRECT_BASE64_STRING_HERE";
+        // 🔒 Your active base64 string is now completely baked in right here:
+        var keyStr = "QVEuQWI4Uk42TGJ4cXNlMlMzR3c5RzJuaVFMeTMtUTVIYmZ1T3EyR2k0a0gyaGxMZkhoVkE=";
 
         document.getElementById('chat-prompt-field').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -231,42 +231,5 @@
                 var steps = ["Searching...", "Thinking...", "Analyzing..."];
                 for(var i=0; i<steps.length; i++) {
                     txtNode.innerText = steps[i];
-                    await new Promise(function(r){setTimeout(r,400);});
-                }
-
-                var cleanKey = atob(keyStr);
-                var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + cleanKey;
-                var payload = {};
-
-                if (tempImg) {
-                    payload = {
-                        contents: [{
-                            parts: [
-                                { text: promptValue || "Analyze this image." },
-                                { inlineData: { mimeType: "image/jpeg", data: tempImg.split(',')[1] } }
-                            ]
-                        }]
-                    };
-                } else {
-                    payload = { contents: [{ parts: [{ text: promptValue }] }] };
-                }
-
-                var res = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                var data = await res.json();
-                hud.classList.add('hidden');
-                
-                var aiResponse = data.candidates[0].content.parts[0].text;
-                insertChatBubbleUI("model", aiResponse);
-            } catch (err) {
-                hud.classList.add('hidden');
-                insertChatBubbleUI("model", "Connection dropped. Check your base64 API key token string on line 125!");
-            }
-        }
-    </script>
-</body>
-</html>
+                    await new Promise
 
