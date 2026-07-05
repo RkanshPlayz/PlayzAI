@@ -48,7 +48,7 @@
             flex-direction: column;
             gap: 15px;
             margin-top: 60px;
-            margin-bottom: 100px;
+            margin-bottom: 110px;
             box-sizing: border-box;
         }
         .chat-bubble-row { display: flex; width: 100%; }
@@ -88,12 +88,12 @@
             font-size: 0.9rem;
             color: #00f5ff;
             position: fixed;
-            bottom: 95px;
+            bottom: 105px;
             left: 20px;
             z-index: 99;
         }
         .footer-launcher-dock {
-            padding: 12px 15px 25px 15px;
+            padding: 12px 15px 35px 15px;
             background: #0c0c16;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             position: fixed;
@@ -150,7 +150,7 @@
     <div class="chat-view-container" id="chat-scroller-layer">
         <div class="chat-bubble-row ai-style">
             <div class="chat-bubble-box">
-                Hello! I am PlayzAi. Your layout is fully updated. Click the plus button to attach pictures!
+                Hello! I am PlayzAi. Your mobile chat layout is fixed high above the keyboard panel. Let's talk!
             </div>
         </div>
     </div>
@@ -261,10 +261,9 @@
                 insertChatBubbleUI("model", aiResponse);
             } catch (err) {
                 hud.classList.add('hidden');
-                insertChatBubbleUI("model", "Connection timeout. Please click send again!");
+                insertChatBubbleUI("model", "Connection dropped. Please tap send again!");
             }
         }
     </script>
 </body>
 </html>
-
